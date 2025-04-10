@@ -59,6 +59,7 @@
     <p>シンプルなオセロゲームです。</p>
     <br>
 </header>
+
 <body>
     <div id="board"></div>
     <script>
@@ -163,4 +164,49 @@
         initializeBoard();
     </script>
 </body>
+<footer>
+    <h3>現在のプレイヤー</h3>
+    <p id="currentPlayer"></p>
+
+    <h3>戦況</h3>
+    <p id="cellStatus"></p>
+    <script>
+        const currentPlayerElement = document.getElementById('currentPlayer');
+        const cellStatusElement = document.getElementById('cellStatus');
+
+        function updateFooter() {
+            // 現在のプレイヤーを表示
+            currentPlayerElement.textContent = currentPlayer === 'black' ? '黒の番です' : '白の番です';
+
+            // コマの個数をカウント
+            let blackCount = 0;
+            let whiteCount = 0;
+            board.forEach(row => {
+                row.forEach(cell => {
+                    if (cell === 'black') blackCount++;
+                    if (cell === 'white') whiteCount++;
+                });
+            });
+
+            // 戦況を表示
+            cellStatusElement.textContent = `黒: ${blackCount}個, 白: ${whiteCount}個`;
+        }
+
+        // 初期化時とターン終了時に呼び出す
+        initializeBoard();
+        updateFooter();
+
+        // handleCellClick関数の最後に追加
+        function handleCellClick(row, col) {
+            if (board[row][col] !== null || !isValidMove(row, col, currentPlayer)) return;
+
+            board[row][col] = currentPlayer;
+            flipDiscs(row, col, currentPlayer);
+            currentPlayer = currentPlayer === 'black' ? 'white' : 'black';
+            renderBoard();
+            updateFooter(); // フッターを更新
+        }
+    </script>
+</footer>
+</footer>
 </html>
