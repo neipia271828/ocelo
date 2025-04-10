@@ -1,4 +1,3 @@
-<!-- html/css,javascriptを使って友達とオセロをすることのできるwebアプリを作って下さい。コマのひっくり返し機能もちゃんと実装して下さい。をHTML1ファイルでつくって by OpenAI API -->
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -6,21 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>オセロゲーム</title>
     <style>
-        /* 全体のレイアウト */
         body {
             display: flex;
             flex-direction: column;
-            min-height: 100vh; /* ビューポート全体の高さを確保 */
+            min-height: 100vh;
             margin: 0;
+            font-family: sans-serif;
         }
 
-        /* ヘッダー */
         #header-container {
-            flex: 0 0 auto; /* 固定サイズ */
+            flex: 0 0 auto;
         }
 
         header {
-            position: relative;
             width: 100%;
             background-color: #fff;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -29,9 +26,8 @@
             height: 60px;
         }
 
-        /* ボード */
         #board-container {
-            flex: 1; /* 残りのスペースを埋める */
+            flex: 1;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -44,9 +40,32 @@
             gap: 2px;
         }
 
-        /* フッター */
+        .cell {
+            width: 50px;
+            height: 50px;
+            background-color: #008000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 4px;
+        }
+
+        .black, .white {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .black {
+            background-color: black;
+        }
+
+        .white {
+            background-color: white;
+        }
+
         #footer-container {
-            flex: 0 0 auto; /* 固定サイズ */
+            flex: 0 0 auto;
         }
 
         footer {
@@ -60,161 +79,142 @@
 <body>
     <div id="header-container">
         <header>
-            <h1>オセロゲーム！！！！</h1>
+            <h1>オセロゲーム</h1>
             <p>シンプルなオセロゲームです。</p>
         </header>
     </div>
+
     <div id="board-container">
         <div id="board"></div>
-        <script>
-            const boardElement = document.getElementById('board');
-            const board = Array(8).fill(null).map(() => Array(8).fill(null));
-            let currentPlayer = 'black';
-    
-            function initializeBoard() {
-                board[3][3] = 'white';
-                board[3][4] = 'black';
-                board[4][3] = 'black';
-                board[4][4] = 'white';
-                renderBoard();
-            }
-    
-            function renderBoard() {
-                boardElement.innerHTML = '';
-                board.forEach((row, rowIndex) => {
-                    row.forEach((cell, colIndex) => {
-                        const cellElement = document.createElement('div');
-                        cellElement.className = 'cell';
-                        cellElement.addEventListener('click', () => handleCellClick(rowIndex, colIndex));
-    
-                        if (cell) {
-                            const disc = document.createElement('div');
-                            disc.className = cell;
-                            cellElement.appendChild(disc);
-                        }
-    
-                        boardElement.appendChild(cellElement);
-                    });
-                });
-            }
-    
-            function handleCellClick(row, col) {
-                if (board[row][col] !== null || !isValidMove(row, col, currentPlayer)) return;
-    
-                board[row][col] = currentPlayer;
-                flipDiscs(row, col, currentPlayer);
-                currentPlayer = currentPlayer === 'black' ? 'white' : 'black';
-                renderBoard();
-            }
-    
-            function isValidMove(row, col, player) {
-                const opponent = player === 'black' ? 'white' : 'black';
-                const directions = [
-                    [-1, -1], [-1, 0], [-1, 1],
-                    [0, -1],          [0, 1],
-                    [1, -1], [1, 0], [1, 1],
-                ];
-                
-                return directions.some(([dx, dy]) => {
-                    let x = row + dx;
-                    let y = col + dy;
-                    let foundOpponent = false;
-    
-                    while (x >= 0 && x < 8 && y >= 0 && y < 8) {
-                        if (board[x][y] === opponent) {
-                            foundOpponent = true;
-                        } else if (board[x][y] === player) {
-                            return foundOpponent;
-                        } else {
-                            break;
-                        }
-                        x += dx;
-                        y += dy;
-                    }
-                    return false;
-                });
-            }
-    
-            function flipDiscs(row, col, player) {
-                const opponent = player === 'black' ? 'white' : 'black';
-                const directions = [
-                    [-1, -1], [-1, 0], [-1, 1],
-                    [0, -1],          [0, 1],
-                    [1, -1], [1, 0], [1, 1],
-                ];
-    
-                directions.forEach(([dx, dy]) => {
-                    let x = row + dx;
-                    let y = col + dy;
-                    const flipPositions = [];
-    
-                    while (x >= 0 && x < 8 && y >= 0 && y < 8) {
-                        if (board[x][y] === opponent) {
-                            flipPositions.push([x, y]);
-                        } else if (board[x][y] === player) {
-                            flipPositions.forEach(([fx, fy]) => {
-                                board[fx][fy] = player;
-                            });
-                            break;
-                        } else {
-                            break;
-                        }
-                        x += dx;
-                        y += dy;
-                    }
-                });
-            }
-    
-            initializeBoard();
-        </script>
     </div>
+
     <div id="footer-container">
         <footer>
-            <br>
             <h3>現在のプレイヤー</h3>
             <p id="currentPlayer"></p>
-        
             <h3>戦況</h3>
             <p id="cellStatus"></p>
-            <br>
-            <script>
-                const currentPlayerElement = document.getElementById('currentPlayer');
-                const cellStatusElement = document.getElementById('cellStatus');
-        
-                function updateFooter() {
-                    // 現在のプレイヤーを表示
-                    currentPlayerElement.textContent = currentPlayer === 'black' ? '黒の番です' : '白の番です';
-        
-                    // コマの個数をカウント
-                    let blackCount = 0;
-                    let whiteCount = 0;
-                    board.forEach(row => {
-                        row.forEach(cell => {
-                            if (cell === 'black') blackCount++;
-                            if (cell === 'white') whiteCount++;
-                        });
-                    });
-        
-                    // 戦況を表示
-                    cellStatusElement.textContent = `黒: ${blackCount}個, 白: ${whiteCount}個`;
-                }
-        
-                // 初期化時とターン終了時に呼び出す
-                initializeBoard();
-                updateFooter();
-        
-                // handleCellClick関数の最後に追加
-                function handleCellClick(row, col) {
-                    if (board[row][col] !== null || !isValidMove(row, col, currentPlayer)) return;
-        
-                    board[row][col] = currentPlayer;
-                    flipDiscs(row, col, currentPlayer);
-                    currentPlayer = currentPlayer === 'black' ? 'white' : 'black';
-                    renderBoard();
-                    updateFooter(); // フッターを更新
-                }
-            </script>
         </footer>
     </div>
+
+    <script>
+        const boardElement = document.getElementById('board');
+        const currentPlayerElement = document.getElementById('currentPlayer');
+        const cellStatusElement = document.getElementById('cellStatus');
+
+        const board = Array(8).fill(null).map(() => Array(8).fill(null));
+        let currentPlayer = 'black';
+
+        function initializeBoard() {
+            board[3][3] = 'white';
+            board[3][4] = 'black';
+            board[4][3] = 'black';
+            board[4][4] = 'white';
+            renderBoard();
+            updateFooter();
+        }
+
+        function renderBoard() {
+            boardElement.innerHTML = '';
+            board.forEach((row, rowIndex) => {
+                row.forEach((cell, colIndex) => {
+                    const cellElement = document.createElement('div');
+                    cellElement.className = 'cell';
+                    cellElement.addEventListener('click', () => handleCellClick(rowIndex, colIndex));
+
+                    if (cell) {
+                        const disc = document.createElement('div');
+                        disc.className = cell;
+                        cellElement.appendChild(disc);
+                    }
+
+                    boardElement.appendChild(cellElement);
+                });
+            });
+        }
+
+        function handleCellClick(row, col) {
+            if (board[row][col] !== null || !isValidMove(row, col, currentPlayer)) return;
+
+            board[row][col] = currentPlayer;
+            flipDiscs(row, col, currentPlayer);
+            currentPlayer = currentPlayer === 'black' ? 'white' : 'black';
+            renderBoard();
+            updateFooter();
+        }
+
+        function isValidMove(row, col, player) {
+            const opponent = player === 'black' ? 'white' : 'black';
+            const directions = [
+                [-1, -1], [-1, 0], [-1, 1],
+                [0, -1],          [0, 1],
+                [1, -1], [1, 0], [1, 1]
+            ];
+
+            return directions.some(([dx, dy]) => {
+                let x = row + dx;
+                let y = col + dy;
+                let foundOpponent = false;
+
+                while (x >= 0 && x < 8 && y >= 0 && y < 8) {
+                    if (board[x][y] === opponent) {
+                        foundOpponent = true;
+                    } else if (board[x][y] === player) {
+                        return foundOpponent;
+                    } else {
+                        break;
+                    }
+                    x += dx;
+                    y += dy;
+                }
+                return false;
+            });
+        }
+
+        function flipDiscs(row, col, player) {
+            const opponent = player === 'black' ? 'white' : 'black';
+            const directions = [
+                [-1, -1], [-1, 0], [-1, 1],
+                [0, -1],          [0, 1],
+                [1, -1], [1, 0], [1, 1]
+            ];
+
+            directions.forEach(([dx, dy]) => {
+                let x = row + dx;
+                let y = col + dy;
+                const flipPositions = [];
+
+                while (x >= 0 && x < 8 && y >= 0 && y < 8) {
+                    if (board[x][y] === opponent) {
+                        flipPositions.push([x, y]);
+                    } else if (board[x][y] === player) {
+                        flipPositions.forEach(([fx, fy]) => {
+                            board[fx][fy] = player;
+                        });
+                        break;
+                    } else {
+                        break;
+                    }
+                    x += dx;
+                    y += dy;
+                }
+            });
+        }
+
+        function updateFooter() {
+            currentPlayerElement.textContent = currentPlayer === 'black' ? '黒の番です' : '白の番です';
+            let blackCount = 0;
+            let whiteCount = 0;
+            board.forEach(row => {
+                row.forEach(cell => {
+                    if (cell === 'black') blackCount++;
+                    if (cell === 'white') whiteCount++;
+                });
+            });
+            cellStatusElement.textContent = `黒: ${blackCount}個, 白: ${whiteCount}個`;
+        }
+
+        initializeBoard();
+    </script>
 </body>
 </html>
