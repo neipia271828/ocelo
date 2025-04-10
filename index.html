@@ -6,6 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>オセロゲーム</title>
     <style>
+        header {
+            position: fixed; /* 画面の上部に固定 */
+            top: 0;
+            left: 0;
+            width: 100%; /* 横幅を画面全体に広げる */
+            background-color: #fff; /* 背景色を設定 */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 下に影をつける */
+            z-index: 1000; /* 他の要素より前面に表示 */
+            text-align: center;
+            padding: 10px 0;
+        }
         body {
             display: flex;
             justify-content: center;
