@@ -24,6 +24,17 @@
             height: 100vh;
             background-color: #f0f0f0;
         }
+
+        footer {
+            position: fixed;
+            top: 0;
+            left:0;
+            width: 100%;
+            background-color: #f0f0f0;
+            box-shadow: 0 2px rgba(0, 0, 0, 0.1);
+            z-index: 1001;
+            padding: 10px 0;
+        }
         #board {
             display: grid;
             grid-template-columns: repeat(8, 50px);
@@ -170,6 +181,7 @@
 
     <h3>戦況</h3>
     <p id="cellStatus"></p>
+    <br>
     <script>
         const currentPlayerElement = document.getElementById('currentPlayer');
         const cellStatusElement = document.getElementById('cellStatus');
