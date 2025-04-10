@@ -1,0 +1,150 @@
+<!-- html/css,javascriptを使って友達とオセロをすることのできるwebアプリを作って下さい。コマのひっくり返し機能もちゃんと実装して下さい。をHTML1ファイルでつくって by OpenAI API -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>オセロゲーム</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        #board {
+            display: grid;
+            grid-template-columns: repeat(8, 50px);
+            grid-template-rows: repeat(8, 50px);
+            gap: 2px;
+        }
+        .cell {
+            width: 50px;
+            height: 50px;
+            background-color: green;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .black {
+            background-color: black;
+            border-radius: 50%;
+            width: 80%;
+            height: 80%;
+        }
+        .white {
+            background-color: white;
+            border-radius: 50%;
+            width: 80%;
+            height: 80%;
+        }
+    </style>
+</head>
+<body>
+    <div id="board"></div>
+    <script>
+        const boardElement = document.getElementById('board');
+        const board = Array(8).fill(null).map(() => Array(8).fill(null));
+        let currentPlayer = 'black';
+
+        function initializeBoard() {
+            board[3][3] = 'white';
+            board[3][4] = 'black';
+            board[4][3] = 'black';
+            board[4][4] = 'white';
+            renderBoard();
+        }
+
+        function renderBoard() {
+            boardElement.innerHTML = '';
+            board.forEach((row, rowIndex) => {
+                row.forEach((cell, colIndex) => {
+                    const cellElement = document.createElement('div');
+                    cellElement.className = 'cell';
+                    cellElement.addEventListener('click', () => handleCellClick(rowIndex, colIndex));
+
+                    if (cell) {
+                        const disc = document.createElement('div');
+                        disc.className = cell;
+                        cellElement.appendChild(disc);
+                    }
+
+                    boardElement.appendChild(cellElement);
+                });
+            });
+        }
+
+        function handleCellClick(row, col) {
+            if (board[row][col] !== null || !isValidMove(row, col, currentPlayer)) return;
+
+            board[row][col] = currentPlayer;
+            flipDiscs(row, col, currentPlayer);
+            currentPlayer = currentPlayer === 'black' ? 'white' : 'black';
+            renderBoard();
+        }
+
+        function isValidMove(row, col, player) {
+            const opponent = player === 'black' ? 'white' : 'black';
+            const directions = [
+                [-1, -1], [-1, 0], [-1, 1],
+                [0, -1],          [0, 1],
+                [1, -1], [1, 0], [1, 1],
+            ];
+            
+            return directions.some(([dx, dy]) => {
+                let x = row + dx;
+                let y = col + dy;
+                let foundOpponent = false;
+
+                while (x >= 0 && x < 8 && y >= 0 && y < 8) {
+                    if (board[x][y] === opponent) {
+                        foundOpponent = true;
+                    } else if (board[x][y] === player) {
+                        return foundOpponent;
+                    } else {
+                        break;
+                    }
+                    x += dx;
+                    y += dy;
+                }
+                return false;
+            });
+        }
+
+        function flipDiscs(row, col, player) {
+            const opponent = player === 'black' ? 'white' : 'black';
+            const directions = [
+                [-1, -1], [-1, 0], [-1, 1],
+                [0, -1],          [0, 1],
+                [1, -1], [1, 0], [1, 1],
+            ];
+
+            directions.forEach(([dx, dy]) => {
+                let x = row + dx;
+                let y = col + dy;
+                const flipPositions = [];
+
+                while (x >= 0 && x < 8 && y >= 0 && y < 8) {
+                    if (board[x][y] === opponent) {
+                        flipPositions.push([x, y]);
+                    } else if (board[x][y] === player) {
+                        flipPositions.forEach(([fx, fy]) => {
+                            board[fx][fy] = player;
+                        });
+                        break;
+                    } else {
+                        break;
+                    }
+                    x += dx;
+                    y += dy;
+                }
+            });
+        }
+
+        initializeBoard();
+    </script>
+</body>
+</html>
