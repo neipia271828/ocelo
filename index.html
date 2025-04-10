@@ -16,22 +16,15 @@
             z-index: 1000; /* 他の要素より前面に表示 */
             text-align: center;
             padding: 10px 0;
+            height: 60px; /* ヘッダーの高さを固定 */
         }
+
         body {
             display: flex;
             flex-direction: column;
-            min-height: 100vh; /* 高さをビューポート全体に最低限合わせる */
+            min-height: 100vh; /* ビューポート全体の高さを確保 */
             margin: 0;
-            text-align: center;
-            padding-top: 10px;
-            padding-top: 10px;
-        }
-
-        footer {
-            background-color: #f0f0f0;
-            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-            padding: 10px 0;
-            text-align: center;
+            padding-top: 60px; /* ヘッダーの高さ分だけ余白を追加 */
         }
 
         #board {
@@ -40,6 +33,13 @@
             grid-template-rows: repeat(8, 50px);
             gap: 2px;
             flex: 1; /* ボードが余白を埋める */
+        }
+
+        footer {
+            background-color: #f0f0f0;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+            padding: 10px 0;
+            text-align: center;
         }
         .cell {
             width: 50px;
